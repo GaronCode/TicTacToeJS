@@ -3,49 +3,38 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="style.css">
-    <title>Крестики-Нолики</title>
+    <title>Tic-Tac-Toe</title>
 
   </head>
   <body>
-    <h1>Крестики-Нолики</h1>
-    <div id="menu">
+    <header id="header-menu">
+      <h1 id="header-name">Tic-Tac-Toe</h1>
       <div id="inGameMenu" style="display: none;">
-        <table>
-          <thead>
-            <th id="nowTurn">Ход игрока</th><th onclick="stopGame()" class="stopGame">Прервать игру</th>
-          </thead>
-        </table>
+        <div id="turn-number">EXIT</div>
+        <div id="nowTurn">Player Turn</div>
+        <div onclick="stopGame()" class="stopGame">EXIT</div>
       </div>
-      <div id="mainMenu">
-        <table>
-          <thead>
-            <th colspan="2">Настройки</th>
-          </thead>
-          <tr>
-            <td colspan="2">Размер поля</td>
-          </tr>
-          <tr>
-            <td>По оси X</td>
-            <td><input type="number" id="inputX" value="3" /></td>
-          </tr>
-          <tr>
-            <td>По оси Y</td>
-            <td><input type="number" id="inputY" value="3" /></td>
-          </tr>
-          <tr>
-            <td>Длина до победы</td>
-            <td><input type="number" id="inputWin" value="3" /></td>
-          </tr>
-          <tr>
-            <td>Игра против бота</td>
-            <td><input type="checkbox" id="inputAi" /></td>
-          </tr>
-          <tfoot>
-            <td colspan="2"><button type="button" onclick="startGame()" style="width:100%;">Начать игру</button></td>
-          </tfoot>
-        </table>
-      </div>
-    </div>
+    </header>
+    <article class="mainMenu" id="mainMenu">
+      <section>
+        <button type="button" onclick="startGame()" class="button-start-game">START</button>
+      </section>
+
+      <section class="settings">
+        <div class="choice-container">
+          <button class="choice-size x3" onclick="setHtmlPole(3,3,3)"></button><button class="choice-size x5" onclick="setHtmlPole(15,15,5)"></button>
+        </div>
+        <p>Horizontal</p>
+        <input type="number" id="inputX" value="3" />
+        <p>Vertical</p>
+        <input type="number" id="inputY" value="3" />
+        <p>Win-line</p>
+        <input type="number" id="inputWin" value="3" />
+        <p>AI enabled</p>
+        <input type="checkbox" id="inputAi" checked />
+      </section>
+
+    </article>
     <div id="pole">
 
     </div>

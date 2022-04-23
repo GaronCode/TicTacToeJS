@@ -55,13 +55,17 @@ function switchInterface() {
   // функция скрывает или отображает элементы интерфейса
   // в зависимости от того, началась игра или нет
   let inGame = document.getElementById('inGameMenu'); //беру html элемент с айди inGameMenu
+  let headerName = document.getElementById('header-name');
   let mainMenu = document.getElementById('mainMenu'); //беру html элемент с айди mainMenu
   if (game.isStarted === true) { // если игра началась
-    inGame.style.display = 'block'; // отображаю div с айди inGameMenu
+    inGame.style.display = ''; // отображаю div с айди inGameMenu
     mainMenu.style.display = 'none';// прячу div c айди mainMenu
+    headerName.style.display = 'none';
   } else { // иначе (если игра не началась)
-    mainMenu.style.display = 'block';// отображаю div с айди mainMenu
+    mainMenu.style.display = '';// отображаю div с айди mainMenu
     inGame.style.display = 'none';// прячу div c айди inGameMenu
+    headerName.style.display = '';
+    document.getElementById('header-menu').style.backgroundColor = '';
   }
 }
 
@@ -70,25 +74,29 @@ function updateInterface() {
   // функция обновляет внутри html информацию о том,
   // кто сейчас ходит или как закончилась игра
   let html = document.getElementById('nowTurn'); // беру html элемент, который буду менять
+  let headerMenu = document.getElementById('header-menu');
+  document.getElementById('turn-number').innerHTML = 'Turn '+game.turn;
 
   if (game.gameIsOwer === true) { // если игра закончена
     if (game.winner === null) { //если нету победителя
-      html.innerHTML = 'Ничья'; // вставляю в html текст
-      html.style.backgroundColor = '#c4acac'; // меняю цвет этого DIV'а
+      html.innerHTML = 'Draw!'; // вставляю в html текст
+      headerMenu.style.backgroundColor = '#c4acac'; // меняю цвет этого DIV'а
     }
     else { //иначе (если есть победитель)
       let player = game.players[game.winner]; //получаю 'карточку' игрока
-      html.innerHTML = 'Победил '+player.symbol; // вставляю в html текст кто победил
-      html.style.backgroundColor = player.color; // меняю цвет этого DIV'а на цвет победителя
+      html.innerHTML = 'Winner is <span>'+player.symbol+'</span>'; // вставляю в html текст кто победил
+      headerMenu.style.backgroundColor = player.color; // меняю цвет этого DIV'а на цвет победителя
     }
   }
   else { // иначе (если игра НЕ закончена)
     let player = game.players[game.nowTurn]; // получаю игрока, который сейчас должен ходить
-    let s = player.isAi?'Ход ИИ':'Ход игрока';
-    html.innerHTML = s +' <span style="font-size: xx-large; color: '+player.color+'">'+player.symbol+'</span>';
+    let s = player.isAi?'Ai Turn':'Player';
+    html.innerHTML = s +' <span style="color: '+player.color+'">'+player.symbol+'</span>';
     // пишу кто ходит сейчас и вставляю его букву и меняю её цвет
-    html.style.backgroundColor = '#cbd5fd94'; // на всякий случай меняю цвет фона на стандартный
+
+    headerMenu.style.backgroundColor = ''; // на всякий случай меняю цвет фона на стандартный
   }
+
 }
 
 
@@ -112,7 +120,7 @@ function createPole() {
       // обозначает отсуцтвие числа)
 
       // продолжаем создавать табличку
-      poleHtml += '<td onclick="clicked('+axisX+','+axisY+')" id="cell'+axisX+'-'+axisY+'" class="cell">'+axisX+','+axisY+'</td>'
+      poleHtml += '<td onclick="clicked('+axisX+','+axisY+')" id="cell'+axisX+'-'+axisY+'" class="cell"></td>'
       // тег td создаёт одну ячейку,
       // параметр onclick - действие, которое будет совершено при клике
       // тут при клике будет выполняться функция clicked(x,y)
@@ -160,12 +168,12 @@ function aiTurn() {
 
 function clicked(x, y) {
   if (game.gameIsOwer === true) {
-    alert('Игра закончена!');
+    alert('Game is Ower!');
     return;
   }
 
   if (game.players[game.nowTurn].isAi) {
-    alert('Сейчас ход ИИ!');
+    alert('Now AI turn!');
   }
   else makeMove(x, y);
 }
@@ -294,15 +302,13 @@ function changeTurn() {
 function winnerFound(player) {
   game.gameIsOwer = true;
   game.winner = game.nowTurn;
-  alert('Игрок с символом '+player.symbol+' побеждает! Поздравляем!');
 }
 function drawFound() {
   game.gameIsOwer = true;
-  alert('Ничья');
 }
 
 function clearPole() {
-  document.getElementById('pole').innerHTML = 'Начните игру';
+  document.getElementById('pole').innerHTML = '';
 }
 
 
@@ -315,4 +321,13 @@ function stopGame() {
 
 function getRandomInRange(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
+
+
+function setHtmlPole(x,y,l) {
+  document.getElementById('inputX').value = x;
+  document.getElementById('inputY').value = y;
+  document.getElementById('inputWin').value = l;
 }
