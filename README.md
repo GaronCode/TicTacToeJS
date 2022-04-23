@@ -1,2 +1,2 @@
 # TicTacToeJS
-TicTacToe 
+TicTacToe with JavaScript

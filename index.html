@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+    <title>Крестики-Нолики</title>
+
+  </head>
+  <body>
+    <h1>Крестики-Нолики</h1>
+    <div id="menu">
+      <div id="inGameMenu" style="display: none;">
+        <table>
+          <thead>
+            <th id="nowTurn">Ход игрока</th><th onclick="stopGame()" class="stopGame">Прервать игру</th>
+          </thead>
+        </table>
+      </div>
+      <div id="mainMenu">
+        <table>
+          <thead>
+            <th colspan="2">Настройки</th>
+          </thead>
+          <tr>
+            <td colspan="2">Размер поля</td>
+          </tr>
+          <tr>
+            <td>По оси X</td>
+            <td><input type="number" id="inputX" value="3" /></td>
+          </tr>
+          <tr>
+            <td>По оси Y</td>
+            <td><input type="number" id="inputY" value="3" /></td>
+          </tr>
+          <tr>
+            <td>Длина до победы</td>
+            <td><input type="number" id="inputWin" value="3" /></td>
+          </tr>
+          <tr>
+            <td>Игра против бота</td>
+            <td><input type="checkbox" id="inputAi" /></td>
+          </tr>
+          <tfoot>
+            <td colspan="2"><button type="button" onclick="startGame()" style="width:100%;">Начать игру</button></td>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+    <div id="pole">
+
+    </div>
+
+    <script type="text/javascript" src="logic.js"></script>
+  </body>
+</html>

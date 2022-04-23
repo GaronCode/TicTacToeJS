@@ -1,0 +1,37 @@
+body {
+  background: linear-gradient(45deg, #EECFBA96, #C5DDE8D9);
+}
+
+
+.cell {
+  padding: 30px;
+  background-color: #9daff494;
+  border-radius: 15px;
+  cursor: pointer;
+  user-select: none;
+}
+.cell:hover {
+  background-color: #9daff4;
+}
+
+.stopGame {
+  width: 100px;
+  height: 100px;
+  background: #c4acac;
+  border-radius: 0 10px 10px 0;
+  cursor: pointer;
+  user-select: none;
+}
+.stopGame:hover {
+  background: #9f8888;
+  color: #ffe7e7;
+
+}
+#nowTurn {
+  border-radius: 10px 0 0 10px;
+  width: 200px;
+  height: 100px;
+  border-color: #c4acac;
+  border-width: medium;
+  border-style: solid;
+}
