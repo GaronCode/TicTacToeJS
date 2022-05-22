@@ -3,29 +3,31 @@ let game = {};
 
 function startGame() {
   //в объект гейм записываем данные
+
+
   game = {
     isStarted: true,
     x: document.getElementById('inputX').value, //размер поля по оси X - получаем значения из поля ввода
     y: document.getElementById('inputY').value, //размер поля по оси Y - получаем значения из поля ввода
     aiMode: document.getElementById('inputAi').checked, //размер поля по оси Y - получаем значения из поля ввода
     lineForWin: document.getElementById('inputWin').value, //длина линии для выйгрыша - получаем значения из поля ввода
-    players: [ //массив, где будут храниться данные игроков
+    players: [ //массив, где будут храниться данные всех игроков
       {
         symbol: 'X', //символ игрока
         color: '#ea4e4e',  //цвет игрока
-        isAi: false
+        isAi: false  //играет бот?
       },
       {
         symbol: 'O', //символ игрока
         color: '#737ad9',  //цвет игрока
-        isAi: false
+        isAi: false //играет бот?
       }
     ],
     nowTurn: 0, // номер в массиве .players того, кто сейчас ходит
     turn: 1, //номер хода
     pole: [], //массив игрового поля.
-    gameIsOwer: false, // флаг того, закончилась ли игра
-    winner: null // номер из массива .players того, кто победил
+    gameIsOwer: false, // флаг того, закончилась ли игра (игра закончена?)
+    winner: null // номер из массива .players того, кто победил, если нет победителя - null
 
   }
 
@@ -54,17 +56,29 @@ function setStarterPlayer() {
 function switchInterface() {
   // функция скрывает или отображает элементы интерфейса
   // в зависимости от того, началась игра или нет
-  let inGame = document.getElementById('inGameMenu'); //беру html элемент с айди inGameMenu
+  //------------------------------------------------------------------------------//
+  //беру html элементы для взаимодействия
+  //меню, которое должно отображаться когда идёт игра
+  let inGame = document.getElementById('inGameMenu');
+  //Заголовок игры, отображается, когда в меню
   let headerName = document.getElementById('header-name');
-  let mainMenu = document.getElementById('mainMenu'); //беру html элемент с айди mainMenu
-  if (game.isStarted === true) { // если игра началась
-    inGame.style.display = ''; // отображаю div с айди inGameMenu
-    mainMenu.style.display = 'none';// прячу div c айди mainMenu
-    headerName.style.display = 'none';
-  } else { // иначе (если игра не началась)
-    mainMenu.style.display = '';// отображаю div с айди mainMenu
-    inGame.style.display = 'none';// прячу div c айди inGameMenu
-    headerName.style.display = '';
+  //всё меню настроек игры
+  let mainMenu = document.getElementById('mainMenu');
+  //игровое полем
+  let pole = document.getElementById('pole');
+
+  if (game.isStarted === true) { // если игра запущена
+    inGame.style.display = ''; // отображаю внутриигровой интерфейс
+    pole.style.display = '';
+    mainMenu.style.display = 'none';// прячу меню настроек
+    headerName.style.display = 'none'; //прячу заголовок
+  } else { // иначе (если игра не запущена)
+    pole.style.display = 'none';
+    mainMenu.style.display = '';// отображаю меню настроек
+    inGame.style.display = 'none';// прячу внутриигровой интерфейс
+    headerName.style.display = '';// отображаю название игры
+
+    //сбрасываю цвет внутриигрового интерфейса
     document.getElementById('header-menu').style.backgroundColor = '';
   }
 }
@@ -72,29 +86,35 @@ function switchInterface() {
 
 function updateInterface() {
   // функция обновляет внутри html информацию о том,
-  // кто сейчас ходит или как закончилась игра
-  let html = document.getElementById('nowTurn'); // беру html элемент, который буду менять
-  let headerMenu = document.getElementById('header-menu');
-  document.getElementById('turn-number').innerHTML = 'Turn '+game.turn;
+  // кто сейчас ходит и/или как закончилась игра
 
-  if (game.gameIsOwer === true) { // если игра закончена
+  // беру html элемент, в который буду выводить того, кто сейчас ходит и статус игры
+  let statusDiv = document.getElementById('nowTurn');
+  //место, куда будет выводиться номер хода
+  let turnNumber = document.getElementById('turn-number');
+  // получаю элемент, который буду окрашивать в разные цвета (цвета того, кто победил или цвета для ничьи)
+  let headerMenu = document.getElementById('header-menu');
+
+  //вывожу номер хода
+  turnNumber.innerHTML = game.turn;
+
+  if (game.gameIsOwer === true) { // если игра ЗАКОНЧЕНА
     if (game.winner === null) { //если нету победителя
-      html.innerHTML = 'Draw!'; // вставляю в html текст
-      headerMenu.style.backgroundColor = '#c4acac'; // меняю цвет этого DIV'а
+      statusDiv.innerHTML = 'Draw!'; // вставляю в статус текст ничьи
+      headerMenu.style.backgroundColor = '#c4acac'; // меняю цвет шапки
     }
     else { //иначе (если есть победитель)
       let player = game.players[game.winner]; //получаю 'карточку' игрока
-      html.innerHTML = 'Winner is <span>'+player.symbol+'</span>'; // вставляю в html текст кто победил
-      headerMenu.style.backgroundColor = player.color; // меняю цвет этого DIV'а на цвет победителя
+      statusDiv.innerHTML = 'Winner is <span>'+player.symbol+'</span>'; // вставляю в статус текст кто победил
+      headerMenu.style.backgroundColor = player.color; // меняю цвет шапки на цвет победителя
     }
   }
-  else { // иначе (если игра НЕ закончена)
+  else { // иначе (если игра ПРОДОЛЖАЕТСЯ)
     let player = game.players[game.nowTurn]; // получаю игрока, который сейчас должен ходить
-    let s = player.isAi?'Ai Turn':'Player';
-    html.innerHTML = s +' <span style="color: '+player.color+'">'+player.symbol+'</span>';
-    // пишу кто ходит сейчас и вставляю его букву и меняю её цвет
+    let s = player.isAi?'Ai Turn':'Player'; //записываем информацию о том, кто сейчас ходит
+    // вставляем в стутус текст: кто ходит сейчас (игрок или бот), его символ и его цвет
+    statusDiv.innerHTML = s +' <span style="color: '+player.color+'">'+player.symbol+'</span>';
 
-    headerMenu.style.backgroundColor = ''; // на всякий случай меняю цвет фона на стандартный
   }
 
 }
