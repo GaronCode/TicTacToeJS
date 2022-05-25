@@ -12,7 +12,7 @@
       <div id="inGameMenu" style="display: none;">
         <div>Turn <span id="turn-number"></span></div>
         <div id="nowTurn">Player Turn</div>
-        <div onclick="stopGame()" class="stopGame">EXIT</div>
+        <div onclick="stopGame()" class="stopGame" id="stopGame">EXIT</div>
       </div>
     </header>
     <article class="mainMenu" id="mainMenu">
@@ -38,7 +38,45 @@
     <div id="pole" style="display: none">
 
     </div>
-
     <script type="text/javascript" src="logic.js"></script>
+    <script type="text/javascript">
+
+function startGame() {
+  let game = new TikTacToe();
+
+  game.setHideEl(i('mainMenu')).setHideEl(i('header-name'));
+  game.setShowEl(i('inGameMenu')).setShowEl(i('pole'));
+  game.setWinnerColorEl(i('header-menu'));
+  game.setStatusEl(i('nowTurn')).setTurnNumberEl(i('turn-number'));
+  game.setPole(i('pole'));
+  game.addPlayer({
+    symbol: 'X',
+    color: '#ea4e4e',
+    isAi: false
+  }).addPlayer({
+    symbol: 'O',
+    color: '#737ad9',
+    isAi: i('inputAi').checked
+  });
+  game.setRules({
+    x: i('inputX').value,
+    y: i('inputY').value,
+    line: i('inputWin').value
+  });
+
+  game.setStopGameEl(i("stopGame"));
+  game.start();
+}
+
+function setHtmlPole(x,y,l) {
+  i('inputX').value = x;
+  i('inputY').value = y;
+  i('inputWin').value = l;
+}
+
+function i(i) {
+  return document.getElementById(i);
+}
+    </script>
   </body>
 </html>
