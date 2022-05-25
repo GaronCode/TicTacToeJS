@@ -175,17 +175,26 @@ class TikTacToe {
 
   _aiTurn() {  this.timeOut = setTimeout(()=>{
       let allPosibleMoves = [] // Массив для всех доступных ходов
-
+      let maxLength = 0;
       this.pole.arr.forEach((item, y) => {
         item.forEach((item, x) => {
           if (item === null) {
-            allPosibleMoves.push({x: x, y: y});
+            let line = this._findWinner(x,y,false, this.players[this.nowTurnPlayerArrId].symbol);
+            if (line > this.pole.lineForWin) line = this.pole.lineForWin;
+            if (!allPosibleMoves[line]) allPosibleMoves[line] = []
+            allPosibleMoves[line].push({x: x,y: y});
           }
         });
       });
-      let move = this._getRandomInRange(0, allPosibleMoves.length-1);// выбираем случайный ход
 
-      this._makeMove(allPosibleMoves[move].x, allPosibleMoves[move].y);
+
+      let i = this.pole.lineForWin;
+      while (allPosibleMoves[i] === undefined) i--;
+
+      let needArr = allPosibleMoves[i];
+      let move = this._getRandomInRange(0, needArr.length-1);// выбираем случайный ход
+
+      this._makeMove(needArr[move].x, needArr[move].y);
     }, this._getRandomInRange(100,this.AIDelay));}
 
   _makeMove(x, y) {
@@ -197,7 +206,7 @@ class TikTacToe {
       let winner = this._findWinner(x, y);
       if (winner === true) {
         this._winnerFound(player);
-      } else if (this.turn > this.pole.size.x * this.pole.size.y) {
+      } else if (this.turn >= this.pole.size.x * this.pole.size.y) {
         this._drawFound();
       }
       else {
@@ -206,7 +215,7 @@ class TikTacToe {
       this._updateInterface();
 
     } else {
-      alert('Сюда невозможно походить!');
+      alert('Cannot move here!');
     }
   }
 
@@ -216,11 +225,13 @@ class TikTacToe {
     htmlCell.innerHTML = player.symbol;
   }
 
-  _findWinner(x, y) {
-      let symbol = this.pole.arr[y][x];
+  _findWinner(x, y, now = true, symbol = '') {
+    if (symbol === '') {
+      symbol = this.pole.arr[y][x];
+    }
       let pole = this.pole.arr;
       let lineForWin = this.pole.lineForWin;
-      let length, i;
+      let length, i, maxLength = 0;
 
 
     //для горизонтальной линии
@@ -236,8 +247,11 @@ class TikTacToe {
         length++;
       }
 
-      if (length >= lineForWin) {
+      if (now && length >= lineForWin) {
         return true;
+      }
+      else {
+        if (maxLength < length) maxLength = length;
       }
     //для вертикальной линии
       length = 1;
@@ -252,8 +266,11 @@ class TikTacToe {
         length++;
       }
 
-      if (length >= lineForWin) {
+      if (now && length >= lineForWin) {
         return true;
+      }
+      else {
+        if (maxLength < length) maxLength = length;
       }
 
 
@@ -271,8 +288,11 @@ class TikTacToe {
         length++;
       }
 
-      if (length >= lineForWin) {
+      if (now && length >= lineForWin) {
         return true;
+      }
+      else {
+        if (maxLength < length) maxLength = length;
       }
 
 
@@ -289,11 +309,20 @@ class TikTacToe {
         length++;
       }
 
-      if (length >= lineForWin) {
+      if (now && length >= lineForWin) {
         return true;
       }
+      else {
+        if (maxLength < length) maxLength = length;
+      }
 
-      return false;
+      if (now) {
+        return false;
+      }
+      else {
+        return maxLength;
+      }
+
     }
   _winnerFound(player) {
     this.gameIsOwer = true;
